@@ -1,8 +1,5 @@
 apply plugin: 'com.android.library'
 
-group = "com.kongzue.dialogx.style.miui"
-version = BUILD_VERSION
-
 android {
     compileSdkVersion 30
 

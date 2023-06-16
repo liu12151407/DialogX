@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,7 @@ public class MaxRelativeLayout extends RelativeLayout {
     private ScrollView childScrollView;
     
     public MaxRelativeLayout setMaxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
+        if (maxHeight > 0) this.maxHeight = maxHeight;
         return this;
     }
     
@@ -92,7 +93,16 @@ public class MaxRelativeLayout extends RelativeLayout {
         if (maxWidth > 0) this.maxWidth = maxWidth;
         return this;
     }
-    
+
+    public void setMinHeight(int minHeight) {
+        if (minHeight > 0) this.minHeight = minHeight;
+
+    }
+
+    public void setMinWidth(int minWidth) {
+        if (minWidth > 0) this.minWidth = minWidth;
+    }
+
     private int preWidth = -1;
     
     @Override
@@ -123,15 +133,10 @@ public class MaxRelativeLayout extends RelativeLayout {
             if (widthTemp < minWidth) widthTemp = minWidth;
             if (heightTemp < minHeight) heightTemp = minHeight;
             
-            if (heightMode == EXACTLY) {
-                heightTemp = heightSize;
-            }
-            if (widthMode == EXACTLY) {
-                widthTemp = widthSize;
-            }
             LayoutParams lp = (LayoutParams) blurView.getLayoutParams();
-            lp.width = widthTemp > lp.width ? widthTemp : lp.width;
-            lp.height = heightTemp > lp.height ? heightTemp : lp.height;
+            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+            lp.width = widthTemp;
+            lp.height = heightTemp;
             blurView.setLayoutParams(lp);
         } else {
             if (blurView != null) {

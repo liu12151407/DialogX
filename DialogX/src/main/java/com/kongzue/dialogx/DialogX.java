@@ -42,6 +42,15 @@ public class DialogX {
     //对话框最大宽度（像素）
     public static int dialogMaxWidth;
     
+    //对话框最大高度（像素）
+    public static int dialogMaxHeight;
+    
+    //对话框最小宽度（像素）
+    public static int dialogMinWidth;
+    
+    //对话框最小高度（像素）
+    public static int dialogMinHeight;
+    
     //是否允许 InputDialog 自动弹出键盘
     public static boolean autoShowInputKeyboard = true;
     
@@ -134,6 +143,13 @@ public class DialogX {
     
     //Window 模式使用全局悬浮窗，需要 SYSTEM_ALERT_WINDOW 权限
     public static boolean globalHoverWindow = false;
+    
+    //部分插屏广告 SDK 可能出现背景黑屏的问题，在这里配置需要 DialogX 屏蔽的 Activity 的包名以屏蔽对该 activity 的支持：
+    public static String[] unsupportedActivitiesPackageNames = new String[]{
+            "com.bytedance.sdk.openadsdk.stub.activity",
+            "com.mobile.auth.gatewayauth",
+            "com.google.android.gms.ads"
+    };
     
     public enum THEME {
         LIGHT, DARK, AUTO

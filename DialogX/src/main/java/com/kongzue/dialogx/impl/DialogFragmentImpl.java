@@ -45,6 +45,7 @@ public class DialogFragmentImpl extends DialogFragment {
     public DialogFragmentImpl(BaseDialog baseDialog, View dialogView) {
         this.dialogView = dialogView;
         this.baseDialog = baseDialog;
+        activityWeakReference = new WeakReference<>(baseDialog.getOwnActivity());
     }
     
     @Override
@@ -57,10 +58,6 @@ public class DialogFragmentImpl extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (BaseDialog.getTopActivity() != null && BaseDialog.getTopActivity() instanceof Activity) {
-            activityWeakReference = new WeakReference<>(((Activity) BaseDialog.getTopActivity()));
-        }
-        if (activityWeakReference == null || activityWeakReference.get() == null) return;
         final Activity activity = activityWeakReference.get();
         
         if (getDialog() == null) return;
@@ -81,13 +78,16 @@ public class DialogFragmentImpl extends DialogFragment {
                 for (BaseDialog dialog : BaseDialog.getRunningDialogList()) {
                     if (dialog.getOwnActivity() == activity && dialog != baseDialog) {
                         if (!(dialog instanceof NoTouchInterface)) {
-                            Log.e(">>>", "onTouch: "+dialog );
                             dialog.getDialogView().dispatchTouchEvent(event);
                             return true;
                         }
                     }
                 }
-                return activity.dispatchTouchEvent(event);
+                if (baseDialog instanceof NoTouchInterface) {
+                    return activity.dispatchTouchEvent(event);
+                }else{
+                    return true;
+                }
             }
         });
         dialogWindow.setAttributes(lp);
@@ -106,7 +106,10 @@ public class DialogFragmentImpl extends DialogFragment {
                 }
             }
             dialogWindow.getDecorView().setSystemUiVisibility(visibility);
-            dialogWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            dialogWindow.addFlags(
+                    WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS |
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+            );
             dialogWindow.setStatusBarColor(Color.TRANSPARENT);
             dialogWindow.setNavigationBarColor(Color.TRANSPARENT);
         } else {

@@ -92,10 +92,12 @@ public class PopMenuArrayAdapter extends BaseAdapter {
         if (customBackgroundRes != 0) {
             convertView.setBackgroundResource(customBackgroundRes);
         }
-        if (popMenu.getPressedIndex() == position) {
-            viewHolder.boxItem.setBackgroundResource(popMenu.isLightTheme() ? R.color.black5 : R.color.white5);
-        } else {
-            viewHolder.boxItem.setBackgroundResource(R.color.empty);
+        if (viewHolder.boxItem != null) {
+            if (popMenu.getPressedIndex() == position) {
+                viewHolder.boxItem.setBackgroundResource(popMenu.isLightTheme() ? R.color.black5 : R.color.white5);
+            } else {
+                viewHolder.boxItem.setBackgroundResource(R.color.empty);
+            }
         }
         viewHolder.imgDialogxMenuIcon.setVisibility(View.GONE);
         viewHolder.txtDialogxMenuText.setText(menuList.get(position));
@@ -145,6 +147,11 @@ public class PopMenuArrayAdapter extends BaseAdapter {
                 viewHolder.spaceDialogxRightPadding.setVisibility(View.GONE);
             }
         }
+        
+        if (popMenu.getMenuMenuItemLayoutRefreshCallback() != null) {
+            popMenu.getMenuMenuItemLayoutRefreshCallback().getView(popMenu, position, convertView, parent);
+        }
+        
         return convertView;
     }
     
@@ -157,7 +164,5 @@ public class PopMenuArrayAdapter extends BaseAdapter {
         ImageView imgDialogxMenuIcon;
         TextView txtDialogxMenuText;
         Space spaceDialogxRightPadding;
-        
-        
     }
 }

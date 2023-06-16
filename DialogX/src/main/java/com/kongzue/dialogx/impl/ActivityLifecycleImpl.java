@@ -6,14 +6,17 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.ArrayMap;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.kongzue.dialogx.DialogX;
 import com.kongzue.dialogx.interfaces.BaseDialog;
 import com.kongzue.dialogx.util.DialogXFloatingWindowActivity;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +43,7 @@ public class ActivityLifecycleImpl implements Application.ActivityLifecycleCallb
         if (context != null) {
             Application application = getApplicationContext(context);
             if (application == null) {
-                error("DialogX 未初始化。\n请检查是否在启动对话框前进行初始化操作，使用以下代码进行初始化：\nDialogX.init(context);\n\n另外建议您前往查看 DialogX 的文档进行使用：https://github.com/kongzue/DialogX");
+                error("DialogX 未初始化(E1)。\n请检查是否在启动对话框前进行初始化操作，使用以下代码进行初始化：\nDialogX.init(context);\n\n另外建议您前往查看 DialogX 的文档进行使用：https://github.com/kongzue/DialogX");
                 return;
             }
             
@@ -66,6 +69,14 @@ public class ActivityLifecycleImpl implements Application.ActivityLifecycleCallb
         } catch (Exception e) {
         }
         try {
+            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
+            Object activityThread = activityThreadClass.getDeclaredMethod("currentActivityThread").invoke(null);
+            Method getApplicationMethod = activityThreadClass.getDeclaredMethod("getApplication");
+            Application application = (Application) getApplicationMethod.invoke(activityThread);
+            return application;
+        } catch (Exception e) {
+        }
+        try {
             Application application = (Application) Class.forName("android.app.AppGlobals").getMethod("getInitialApplication").invoke(null, (Object[]) null);
             return application;
         } catch (Exception e) {
@@ -80,6 +91,14 @@ public class ActivityLifecycleImpl implements Application.ActivityLifecycleCallb
         }
         try {
             Application application = (Application) Class.forName("android.app.ActivityThread").getMethod("currentApplication").invoke(null, (Object[]) null);
+            return application;
+        } catch (Exception e) {
+        }
+        try {
+            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
+            Object activityThread = activityThreadClass.getDeclaredMethod("currentActivityThread").invoke(null);
+            Method getApplicationMethod = activityThreadClass.getDeclaredMethod("getApplication");
+            Application application = (Application) getApplicationMethod.invoke(activityThread);
             return application;
         } catch (Exception e) {
         }
@@ -139,14 +158,22 @@ public class ActivityLifecycleImpl implements Application.ActivityLifecycleCallb
             BaseDialog.init(activity);
         }
     }
-    
+
     @Override
-    public void onActivityResumed(@NonNull Activity activity) {
+    public void onActivityPreResumed(@NonNull Activity activity) {
+        Application.ActivityLifecycleCallbacks.super.onActivityPreResumed(activity);
         if (activity.isDestroyed() || activity.isFinishing() || activity instanceof DialogXFloatingWindowActivity) {
             return;
         }
         if (onActivityResumeCallBack != null) {
             onActivityResumeCallBack.getActivity(activity);
+        }
+    }
+
+    @Override
+    public void onActivityResumed(@NonNull Activity activity) {
+        if (activity.isDestroyed() || activity.isFinishing() || activity instanceof DialogXFloatingWindowActivity) {
+            return;
         }
         BaseDialog.onActivityResume(activity);
     }
@@ -178,5 +205,15 @@ public class ActivityLifecycleImpl implements Application.ActivityLifecycleCallb
     
     public interface onActivityResumeCallBack {
         void getActivity(Activity activity);
+    }
+    
+    public static boolean isExemptActivities(Activity activity) {
+        if (activity == null) return true;
+        for (String packageName : DialogX.unsupportedActivitiesPackageNames) {
+            if (activity.getClass().getName().contains(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

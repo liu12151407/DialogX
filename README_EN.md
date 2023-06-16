@@ -5,28 +5,27 @@
     <center><h1>Kongzue DialogX</h1></center> 
 </div>
 
+An easy-to-use dialog box component with better experience than native dialog box, more customizable, more scalable, easy to achieve a variety of dialog boxes, menus and hint effects, more iOS, MIUI, Material You and other theme extensions are available.
 
+<div align=center>    
+  <a href="https://github.com/kongzue/dialogX/">
+    <img src="https://img.shields.io/badge/Kongzue%20DialogX-Release-green.svg" alt="Kongzue Dialog">
+  </a> 
+  <a href="https://github.com/kongzue/DialogX/releases">
+    <img src="https://img.shields.io/github/v/release/kongzue/DialogX?color=green" alt="Maven">
+  </a> 
+  <a href="https://jitpack.io/#kongzue/DialogX">
+    <img src="https://jitpack.io/v/kongzue/DialogX.svg" alt="Jitpack.io">
+  </a> 
+  <a href="http://www.apache.org/licenses/LICENSE-2.0">
+    <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
+  </a> 
+  <a href="http://www.kongzue.com">
+    <img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Homepage">
+  </a>
+</div>
 
-
-After three generations, the new Kongzue DialogX has arrived, not only retaining the advantages of the past, but also bringing more flexible scalability and a new smooth experience.
-
-<a href="https://github.com/kongzue/dialogX/">
-<img src="https://img.shields.io/badge/Kongzue%20DialogX-Release-green.svg" alt="Kongzue Dialog">
-</a> 
-<a href="https://github.com/kongzue/DialogX/releases">
-<img src="https://img.shields.io/github/v/release/kongzue/DialogX?color=green" alt="Maven">
-</a> 
-<a href="https://jitpack.io/#kongzue/DialogX">
-<img src="https://jitpack.io/v/kongzue/DialogX.svg" alt="Jitpack.io">
-</a> 
-<a href="http://www.apache.org/licenses/LICENSE-2.0">
-<img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="License">
-</a> 
-<a href="http://www.kongzue.com">
-<img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Homepage">
-</a>
-
-![DialogX](https://repository-images.githubusercontent.com/298764877/37386d80-8986-11eb-8ff2-1206da84cd8d)
+![DialogX](https://user-images.githubusercontent.com/10115359/229279713-79c43a63-1a0a-4f70-851f-0a0783b94b45.jpg)
 
 # Advantages of DialogX
 
@@ -130,6 +129,37 @@ Because of dependencies, DialogX currently only supports AndroidX as the base fo
 
 ### 📥Introduce
 
+Please choose one of the following two sources to bring in your project.
+
+#### MavenCentral 
+
+<div>
+Latest version: 
+<a href="https://central.sonatype.dev/artifact/com.kongzue.dialogx/DialogX/0.0.48"><img src="https://img.shields.io/maven-central/v/com.kongzue.dialogx/DialogX" alt="DialogX Release"></a></div>
+
+1) In the project's build.gradle file, find the `allprojects{}` block and add the following code.
+
+```
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()      //增加 mavenCentral 仓库
+    }
+}
+```
+
+⚠️ Please note that projects created with the Arctic Fox version of Android Studio will require you to go to settings.gradle and add the above jitpack repository configuration.
+
+2) Find the `dependencies{}` code block in the app's build.gradle file and add the following statement to it.
+
+```
+def dialogx_version = "0.0.48"
+implementation "com.kongzue.dialogx:DialogX:${dialogx_version}"
+```
+
+#### Jitpack
+
 <div>
 <b>Latest Version：</b>
 <a href="https://jitpack.io/#kongzue/DialogX">
@@ -158,7 +188,7 @@ allprojects {
 2) Find the `dependencies{}` block in the app's build.gradle file, and add the following statement to it：
 
 ```
-def dialogx_version = "0.0.46"
+def dialogx_version = "0.0.48"
 implementation "com.github.kongzue.DialogX:DialogX:${dialogx_version}"
 ```
 
@@ -218,5 +248,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
+# Contributors
+Thank you to all who have contributed to DialogX!
 
 If DialogX has helped you build your software better, please give DialogX a Star, every click you make is a great support for DialogX!
+
+[![Stargazers repo roster for @kongzue/DialogX](https://reporoster.com/stars/kongzue/DialogX)](https://github.com/kongzue/DialogX/stargazers)
+
+### Assist in development
+
+<a href="https://github.com/kongzue/DialogX/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kongzue/DialogX" />
+</a>

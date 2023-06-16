@@ -79,6 +79,7 @@ public class TipDialog extends WaitDialog {
     
     public static WaitDialog show(CharSequence message, TYPE tip) {
         boolean noInstance = noInstance();
+        log("noInstance:"+noInstance);
         if (noInstance) instanceBuild();
         me().setTip(message, tip);
         showWithInstance(noInstance);
@@ -157,6 +158,24 @@ public class TipDialog extends WaitDialog {
     
     public TipDialog setMaxWidth(int maxWidth) {
         this.maxWidth = maxWidth;
+        refreshUI();
+        return this;
+    }
+    
+    public TipDialog setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
+        refreshUI();
+        return this;
+    }
+    
+    public TipDialog setMinHeight(int minHeight) {
+        this.minHeight = minHeight;
+        refreshUI();
+        return this;
+    }
+    
+    public TipDialog setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
         refreshUI();
         return this;
     }

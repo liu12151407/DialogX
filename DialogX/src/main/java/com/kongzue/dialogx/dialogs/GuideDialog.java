@@ -30,6 +30,8 @@ import com.kongzue.dialogx.interfaces.OnBindView;
 import com.kongzue.dialogx.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialogx.util.views.DialogXBaseRelativeLayout;
 
+import java.util.Arrays;
+
 /**
  * @author: Kongzue
  * @github: https://github.com/kongzue/
@@ -52,6 +54,7 @@ public class GuideDialog extends CustomDialog {
     protected float stageLightFilletRadius;     //舞台灯光部分的圆角
     protected int maskColor = -1;
     protected OnDialogButtonClickListener<GuideDialog> onStageLightPathClickListener;
+    protected int[] baseViewLocationCoordinateCompensation = new int[4];
     
     protected GuideDialog() {
         super();
@@ -535,7 +538,7 @@ public class GuideDialog extends CustomDialog {
             getDialogImpl().boxCustom.setOnClickListener(null);
             getDialogImpl().boxCustom.setClickable(false);
             
-            ImageView imageView = new ImageView(getContext());
+            ImageView imageView = new ImageView(getOwnActivity());
             imageView.setImageDrawable(tipImage);
             imageView.setAdjustViewBounds(true);
             imageView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -548,7 +551,7 @@ public class GuideDialog extends CustomDialog {
             onBindView.bindParent(getDialogImpl().boxCustom, me);
         }
         if (getOnStageLightPathClickListener() != null && baseView != null) {
-            stageLightPathStub = new View(getContext());
+            stageLightPathStub = new View(getOwnActivity());
             stageLightPathStub.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -565,19 +568,23 @@ public class GuideDialog extends CustomDialog {
         }
     }
     
+    int[] baseViewLocCache;
+    
     @Override
     protected void onGetBaseViewLoc(int[] baseViewLoc) {
-        super.onGetBaseViewLoc(baseViewLoc);
+        if (Arrays.equals(baseViewLoc, baseViewLocCache)) {
+            return;
+        }
         if (getDialogImpl() == null) {
             return;
         }
         Bitmap bkg = Bitmap.createBitmap(getDialogImpl().boxRoot.getWidth(), getDialogImpl().boxRoot.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bkg);
         
-        int x = baseViewLoc[0];
-        int y = baseViewLoc[1];
-        int w = baseViewLoc[2];
-        int h = baseViewLoc[3];
+        int x = baseViewLoc[0] + baseViewLocationCoordinateCompensation[0];
+        int y = baseViewLoc[1] + baseViewLocationCoordinateCompensation[1];
+        int w = baseViewLoc[2] + baseViewLocationCoordinateCompensation[2];
+        int h = baseViewLoc[3] + baseViewLocationCoordinateCompensation[3];
         int hW = w / 2;
         int hH = h / 2;
         
@@ -622,8 +629,10 @@ public class GuideDialog extends CustomDialog {
         }
         stageLightPaint.setXfermode(null);
         canvas.drawColor(maskColor == -1 ? getColor(R.color.black50) : maskColor, PorterDuff.Mode.SRC_OUT);
+        
         BitmapDrawable bkgDrawable = new BitmapDrawable(getResources(), bkg);
         getDialogImpl().boxRoot.setBackground(bkgDrawable);
+        baseViewLocCache = Arrays.copyOf(baseViewLoc, 4);
     }
     
     Paint stageLightPaint;
@@ -709,5 +718,66 @@ public class GuideDialog extends CustomDialog {
         this.screenPaddings = new int[]{paddingLeft, paddingTop, paddingRight, paddingBottom};
         refreshUI();
         return this;
+    }
+    
+    public int[] getBaseViewLocationCoordinateCompensation() {
+        return baseViewLocationCoordinateCompensation;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensation(int[] baseViewLocationCoordinateCompensation) {
+        this.baseViewLocationCoordinateCompensation = baseViewLocationCoordinateCompensation;
+        return this;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensation(int px) {
+        this.baseViewLocationCoordinateCompensation = new int[]{px, px, px, px};
+        refreshUI();
+        return this;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensation(int pxX, int pxY, int pxR, int pxB) {
+        this.baseViewLocationCoordinateCompensation = new int[]{pxX, pxY, pxR, pxB};
+        refreshUI();
+        return this;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensationLeft(int pxX) {
+        this.baseViewLocationCoordinateCompensation[0] = pxX;
+        refreshUI();
+        return this;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensationTop(int pxY) {
+        this.baseViewLocationCoordinateCompensation[1] = pxY;
+        refreshUI();
+        return this;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensationRight(int pxR) {
+        this.baseViewLocationCoordinateCompensation[2] = pxR;
+        refreshUI();
+        return this;
+    }
+    
+    public GuideDialog setBaseViewLocationCoordinateCompensationBottom(int pxB) {
+        this.baseViewLocationCoordinateCompensation[3] = pxB;
+        refreshUI();
+        return this;
+    }
+    
+    public int getBaseViewLocationCoordinateCompensationLeft() {
+        return baseViewLocationCoordinateCompensation[0];
+    }
+    
+    public int getBaseViewLocationCoordinateCompensationTop() {
+        return baseViewLocationCoordinateCompensation[1];
+    }
+    
+    public int getBaseViewLocationCoordinateCompensationRight() {
+        return baseViewLocationCoordinateCompensation[2];
+    }
+    
+    public int getBaseViewLocationCoordinateCompensationBottom() {
+        return baseViewLocationCoordinateCompensation[3];
     }
 }

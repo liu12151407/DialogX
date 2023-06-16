@@ -10,6 +10,7 @@ import androidx.annotation.ColorRes;
 
 import com.kongzue.dialogx.DialogX;
 import com.kongzue.dialogx.R;
+import com.kongzue.dialogx.interfaces.DialogLifecycleCallback;
 import com.kongzue.dialogx.interfaces.DialogXAnimInterface;
 import com.kongzue.dialogx.interfaces.DialogXStyle;
 import com.kongzue.dialogx.interfaces.OnBackPressedListener;
@@ -585,6 +586,24 @@ public class InputDialog extends MessageDialog {
         return this;
     }
     
+    public InputDialog setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
+        refreshUI();
+        return this;
+    }
+    
+    public InputDialog setMinHeight(int minHeight) {
+        this.minHeight = minHeight;
+        refreshUI();
+        return this;
+    }
+    
+    public InputDialog setMinWidth(int minWidth) {
+        this.minWidth = minWidth;
+        refreshUI();
+        return this;
+    }
+    
     public InputDialog setDialogImplMode(DialogX.IMPL_MODE dialogImplMode) {
         this.dialogImplMode = dialogImplMode;
         return this;
@@ -650,6 +669,12 @@ public class InputDialog extends MessageDialog {
     public InputDialog setRootPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
         this.screenPaddings = new int[]{paddingLeft, paddingTop, paddingRight, paddingBottom};
         refreshUI();
+        return this;
+    }
+    
+    public InputDialog setDialogLifecycleCallback(DialogLifecycleCallback<MessageDialog> dialogLifecycleCallback) {
+        this.dialogLifecycleCallback = dialogLifecycleCallback;
+        if (isShow) dialogLifecycleCallback.onShow(me);
         return this;
     }
 }
